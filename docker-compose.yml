@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: fastapi_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: QWer12@*
+      MYSQL_DATABASE: fastapi_backend
+      MYSQL_USER: root
+      MYSQL_PASSWORD: QWer12@*
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - app_network
+
+  fastapi_app:
+    build: .
+    container_name: fastapi_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+mysqlconnector://root:QWer12@*@mysql_db:3306/fastapi_backend
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+    depends_on:
+      - mysql_db
+    networks:
+      - app_network
+    volumes:
+      - ./app:/app/app
+
+volumes:
+  mysql_data:
+
+networks:
+  app_network:
+    driver: bridge
