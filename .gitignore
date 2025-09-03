@@ -141,6 +141,6 @@ dmypy.json
 Thumbs.db
 
 # Project specific
-postgres_data/
+mysql_data/
 logs/
 *.log

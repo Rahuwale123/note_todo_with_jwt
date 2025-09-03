@@ -1,19 +1,20 @@
 version: '3.8'
 
 services:
-  postgres_db:
-    image: postgres:15
-    container_name: fastapi_postgres
+  mysql_db:
+    image: mysql:8.0
+    container_name: fastapi_mysql
     restart: unless-stopped
     environment:
-      POSTGRES_DB: fastapi_backend
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: QWer12@*
+      MYSQL_ROOT_PASSWORD: QWer12@*
+      MYSQL_DATABASE: fastapi_backend
+      MYSQL_USER: root
+      MYSQL_PASSWORD: QWer12@*
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
     networks:
       - app_network
 
@@ -24,19 +25,19 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:QWer12@*@postgres_db:5432/fastapi_backend
+      - DATABASE_URL=mysql+mysqlconnector://root:QWer12@*@mysql_db:3306/fastapi_backend
       - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
       - JWT_ALGORITHM=HS256
       - ACCESS_TOKEN_EXPIRE_MINUTES=1440
     depends_on:
-      - postgres_db
+      - mysql_db
     networks:
       - app_network
     volumes:
       - ./app:/app/app
 
 volumes:
-  postgres_data:
+  mysql_data:
 
 networks:
   app_network:

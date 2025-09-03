@@ -10,7 +10,6 @@ from typing import List
 router = APIRouter(prefix="/notes", tags=["notes"])
 
 
-@router.get("", response_model=List[NoteWithUser])
 @router.get("/", response_model=List[NoteWithUser])
 def get_notes(
     current_user: User = Depends(get_current_user),
@@ -62,7 +61,6 @@ def get_my_notes(
     return result
 
 
-@router.post("", response_model=NoteResponse)
 @router.post("/", response_model=NoteResponse)
 def create_note(
     note_data: NoteCreate,

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Setting up FastAPI Backend with PostgreSQL and Alembic..."
+echo "🚀 Setting up FastAPI Backend with MySQL and Alembic..."
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -18,25 +18,25 @@ echo "✅ Docker and Docker Compose are available"
 
 # Create necessary directories
 echo "📁 Creating necessary directories..."
-mkdir -p postgres/init
+mkdir -p mysql/init
 mkdir -p logs
 
 # Build and start services
 echo "🐳 Building and starting Docker services..."
 docker-compose up --build -d
 
-# Wait for PostgreSQL to be ready
-echo "⏳ Waiting for PostgreSQL to be ready..."
+# Wait for MySQL to be ready
+echo "⏳ Waiting for MySQL to be ready..."
 sleep 30
 
-# Check if PostgreSQL is ready
-echo "🔍 Checking PostgreSQL connection..."
-until docker-compose exec postgres_db pg_isready -U postgres; do
-    echo "⏳ PostgreSQL is not ready yet, waiting..."
+# Check if MySQL is ready
+echo "🔍 Checking MySQL connection..."
+until docker-compose exec mysql_db mysqladmin ping -h"localhost" --silent; do
+    echo "⏳ MySQL is not ready yet, waiting..."
     sleep 5
 done
 
-echo "✅ PostgreSQL is ready!"
+echo "✅ MySQL is ready!"
 
 # Run Alembic migrations
 echo "🔄 Running database migrations..."
@@ -71,9 +71,3 @@ echo "  - Health: http://localhost:8000/health"
 echo "  - Docs:   http://localhost:8000/docs"
 echo "  - Signup: http://localhost:8000/api/v1/auth/signup"
 echo "  - Login:  http://localhost:8000/api/v1/auth/login"
-echo ""
-echo "🗄️  Database:"
-echo "  - PostgreSQL: localhost:5432"
-echo "  - Database:  fastapi_backend"
-echo "  - Username:  postgres"
-echo "  - Password:  QWer12@*"

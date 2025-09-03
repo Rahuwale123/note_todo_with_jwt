@@ -10,7 +10,6 @@ from typing import List
 router = APIRouter(prefix="/todos", tags=["todos"])
 
 
-@router.get("", response_model=List[TodoWithUser])
 @router.get("/", response_model=List[TodoWithUser])
 def get_todos(
     current_user: User = Depends(get_current_user),
@@ -62,7 +61,6 @@ def get_my_todos(
     return result
 
 
-@router.post("", response_model=TodoResponse)
 @router.post("/", response_model=TodoResponse)
 def create_todo(
     todo_data: TodoCreate,
