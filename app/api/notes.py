@@ -34,6 +34,33 @@ def get_notes(
     return result
 
 
+@router.get("/my-notes", response_model=List[NoteWithUser])
+def get_my_notes(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    notes = db.query(Note).filter(
+        Note.organization_id == current_user.organization_id,
+        Note.created_by == current_user.id
+    ).all()
+    
+    result = []
+    for note in notes:
+        note_dict = {
+            "id": note.id,
+            "title": note.title,
+            "content": note.content,
+            "organization_id": note.organization_id,
+            "created_by": note.created_by,
+            "created_at": note.created_at,
+            "updated_at": note.updated_at,
+            "created_by_username": note.created_by_user.username
+        }
+        result.append(note_dict)
+    
+    return result
+
+
 @router.post("/", response_model=NoteResponse)
 def create_note(
     note_data: NoteCreate,

@@ -34,6 +34,33 @@ def get_todos(
     return result
 
 
+@router.get("/my-todos", response_model=List[TodoWithUser])
+def get_my_todos(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    todos = db.query(Todo).filter(
+        Todo.organization_id == current_user.organization_id,
+        Todo.created_by == current_user.id
+    ).all()
+    
+    result = []
+    for todo in todos:
+        todo_dict = {
+            "id": todo.id,
+            "title": todo.title,
+            "completed": todo.completed,
+            "organization_id": todo.organization_id,
+            "created_by": todo.created_by,
+            "created_at": todo.created_at,
+            "updated_at": todo.updated_at,
+            "created_by_username": todo.created_by_user.username
+        }
+        result.append(todo_dict)
+    
+    return result
+
+
 @router.post("/", response_model=TodoResponse)
 def create_todo(
     todo_data: TodoCreate,

@@ -2,9 +2,6 @@ version: '3.8'
 
 services:
   postgres_db:
-    image: postgres:15
-    container_name: fastapi_postgres
-    restart: unless-stopped
     environment:
       POSTGRES_DB: fastapi_backend
       POSTGRES_USER: postgres
@@ -13,30 +10,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app_network
 
   fastapi_app:
     build: .
-    container_name: fastapi_backend
-    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:QWer12@*@postgres_db:5432/fastapi_backend
-      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - JWT_SECRET_KEY=dev-secret-key-change-in-production
       - JWT_ALGORITHM=HS256
       - ACCESS_TOKEN_EXPIRE_MINUTES=1440
-    depends_on:
-      - postgres_db
-    networks:
-      - app_network
+      - DEBUG=True
     volumes:
       - ./app:/app/app
-
-volumes:
-  postgres_data:
-
-networks:
-  app_network:
-    driver: bridge
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

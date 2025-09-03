@@ -10,7 +10,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
-    organization_id: Optional[int] = None
+    organization_name: str
 
 
 class UserUpdate(BaseModel):
