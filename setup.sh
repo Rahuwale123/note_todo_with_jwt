@@ -18,6 +18,7 @@ echo "✅ Docker and Docker Compose are available"
 
 # Create necessary directories
 echo "📁 Creating necessary directories..."
+mkdir -p postgres/init
 mkdir -p logs
 
 # Build and start services

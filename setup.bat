@@ -21,6 +21,7 @@ echo ✅ Docker and Docker Compose are available
 
 REM Create necessary directories
 echo 📁 Creating necessary directories...
+if not exist "postgres\init" mkdir "postgres\init"
 if not exist "logs" mkdir "logs"
 
 REM Build and start services
