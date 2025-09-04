@@ -41,7 +41,7 @@ backend/
 ## 🛠️ Tech Stack
 
 - **Framework**: FastAPI
-- **Database**: MySQL 8.0
+- **Database**: MySQL 8.0 ( postgress not supporting due to some issues so temeporirly switched to mysql)
 - **ORM**: SQLAlchemy 2.0
 - **Migrations**: Alembic
 - **Authentication**: JWT (PyJWT) + bcrypt
